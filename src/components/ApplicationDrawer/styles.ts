@@ -7,10 +7,14 @@ export const ApplicationDrawerStyles = makeStyles((theme: Theme) =>
         root: {
             display: 'flex',
         },
+        h100: {
+            height: "100%",
+        },
         drawer: {
             [theme.breakpoints.up('sm')]: {
                 width: drawerWidth,
                 flexShrink: 0,
+                height: "100%",
             },
         },
         appBar: {
@@ -28,6 +32,7 @@ export const ApplicationDrawerStyles = makeStyles((theme: Theme) =>
         toolbar: theme.mixins.toolbar,
         drawerPaper: {
             width: drawerWidth,
+            position: "relative",
         },
         content: {
             flexGrow: 1,

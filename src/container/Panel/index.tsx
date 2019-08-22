@@ -9,6 +9,7 @@ import reducer, {reducerName} from "./reducer";
 import {Divider, Drawer, List, ListItem, ListItemIcon, ListItemText} from "@material-ui/core";
 import {PanelStyles} from "./styles";
 import ApplicationDrawer from "../../components/ApplicationDrawer";
+import PlayerControlsContainer from "../PlayerControls";
 
 interface IPanelContainerProps {
     example: string,
@@ -22,9 +23,17 @@ const PanelContainer: React.FC<IPanelContainerProps> = (props: IPanelContainerPr
     const {example, setExample} = props;
 
     return (
-       <div>
-          <ApplicationDrawer />
-       </div>
+        <div className={classes.gridContainer}>
+            <div className={classes.nav}>
+                <ApplicationDrawer/>
+            </div>
+            <div className={classes.content}>
+                Test
+            </div>
+            <div className={classes.playerControls}>
+                <PlayerControlsContainer />
+            </div>
+        </div>
     );
 };
 
