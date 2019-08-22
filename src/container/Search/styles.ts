@@ -1,12 +1,12 @@
 import {createStyles, makeStyles, Theme} from "@material-ui/core";
 
-export const PlayerControlsStyles = makeStyles((theme: Theme) =>
+export const SearchStyles = makeStyles((theme: Theme) =>
     createStyles({
-        title: {
+        header: {
             fontWeight: "bold"
         },
         textSecondary: {
-            color: theme.palette.text.secondary
+            color: theme.palette.text.disabled,
         }
     }),
 );

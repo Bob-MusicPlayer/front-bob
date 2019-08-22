@@ -83,7 +83,7 @@ const PlayerControlsContainer: React.FC<IPlayerControlsContainerProps> = (props:
                         }}
                     >
                         <Box height={250} display="flex" flexDirection="column" padding={3}>
-                            <VolumeUpIcon/>
+                            <VolumeUpIcon className={classes.textSecondary} />
                             <Box marginY={1} flexGrow={1}>
                                 <Slider
                                     orientation="vertical"
@@ -91,7 +91,7 @@ const PlayerControlsContainer: React.FC<IPlayerControlsContainerProps> = (props:
                                     aria-labelledby="vertical-slider"
                                 />
                             </Box>
-                            <VolumeDownIcon/>
+                            <VolumeDownIcon className={classes.textSecondary} />
                         </Box>
                     </Popover>
                 </Box>

@@ -1,8 +1,8 @@
 import * as React from "react";
 import {Divider, List, ListItem, ListItemIcon, ListItemText} from "@material-ui/core";
-import SearchIcon from '@material-ui/icons/Search';
-import PlaylistIcon from '@material-ui/icons/PlayCircleFilled';
-import QueueIcon from '@material-ui/icons/QueueMusic';
+import SearchIcon from '@material-ui/icons/SearchRounded';
+import PlaylistIcon from '@material-ui/icons/PlayCircleFilledRounded';
+import QueueIcon from '@material-ui/icons/QueueMusicRounded';
 import {ApplicationDrawerContentStyles} from "./styles";
 
 interface IApplicationDrawerContentProps {

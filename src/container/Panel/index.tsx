@@ -1,15 +1,14 @@
 import React from "react";
 import {connect} from "react-redux";
 import {Dispatch} from "redux";
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
 import {SetExample} from "./actions";
 import ReducerRegistry from "../../utils/reducerRegistry";
 import reducer, {reducerName} from "./reducer";
-import {Divider, Drawer, List, ListItem, ListItemIcon, ListItemText} from "@material-ui/core";
 import {PanelStyles} from "./styles";
 import ApplicationDrawer from "../../components/ApplicationDrawer";
 import PlayerControlsContainer from "../PlayerControls";
+import {Switch, Route} from "react-router-dom";
+import SearchContainer from "../Search";
 
 interface IPanelContainerProps {
     example: string,
@@ -28,7 +27,9 @@ const PanelContainer: React.FC<IPanelContainerProps> = (props: IPanelContainerPr
                 <ApplicationDrawer/>
             </div>
             <div className={classes.content}>
-                Test
+                <Switch>
+                    <Route path="/" exact component={SearchContainer} />
+                </Switch>
             </div>
             <div className={classes.playerControls}>
                 <PlayerControlsContainer />
