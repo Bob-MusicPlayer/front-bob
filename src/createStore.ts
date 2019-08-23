@@ -1,11 +1,17 @@
-import {createStore, combineReducers, applyMiddleware, AnyAction} from 'redux'
+import {createStore, combineReducers, applyMiddleware, AnyAction, compose} from 'redux'
 import reducerRegistry from "./utils/reducerRegistry";
+import createSagaMiddleware from 'redux-saga';
+import rootSaga from "./sagas/rootSaga";
 
 declare global {
     interface Window {
-        __REDUX_DEVTOOLS_EXTENSION__: any
+        __REDUX_DEVTOOLS_EXTENSION_COMPOSE__: any
     }
 }
+
+let composeEnhancers = compose;
+if (window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__)
+    composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({});
 
 const initialState: any = {};
 
@@ -19,17 +25,16 @@ const combine = (reducers: Array<() => {}>) => {
     return combineReducers(reducers);
 };
 
-const customMiddleWare = (store: any) => (next: (a: AnyAction) => void) => (action: AnyAction) => {
-    switch (action.type) {
-        case "search":
+const sagaMiddleware = createSagaMiddleware({});
 
-            break;
-    }
-};
+const middlewares = [sagaMiddleware];
 
+const enhancers = [applyMiddleware(...middlewares)];
 
 const reducer = combine(reducerRegistry.getReducers());
-const store = createStore(reducer, initialState, applyMiddleware(customMiddleWare));
+const store = createStore(reducer, initialState, composeEnhancers(...enhancers));
+
+sagaMiddleware.run(rootSaga);
 
 reducerRegistry.setChangeListener((reducers: any) => {
     console.log(reducers);

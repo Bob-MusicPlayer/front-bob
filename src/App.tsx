@@ -1,5 +1,4 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 import {Provider} from "react-redux";
 import store from "./createStore";
@@ -8,6 +7,30 @@ import {ThemeProvider} from '@material-ui/styles';
 import {AppTheme} from "./theme";
 import {CssBaseline} from "@material-ui/core";
 import {BrowserRouter} from "react-router-dom";
+import {IsPlaying, Play, SetPlaybackInfo} from "./container/PlayerControls/actions";
+
+const e1 = new EventSource('http://localhost:5002/api/v1/events');
+e1.onerror = () => {
+    console.log("sef")
+};
+e1.onmessage = (event) => {
+    const data = JSON.parse(event.data);
+    switch (data.event) {
+        case "play":
+            store.dispatch(IsPlaying(true));
+            break;
+        case "pause":
+            store.dispatch(IsPlaying(false));
+            break;
+        case "sync":
+            if (data.payload.playback != null) {
+                store.dispatch(SetPlaybackInfo(data.payload));
+            }
+            break;
+        default:
+            console.warn("Got unknown event: " + data.event);
+    }
+};
 
 const App: React.FC = () => {
     return (

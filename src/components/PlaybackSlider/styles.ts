@@ -12,6 +12,9 @@ export const PlaybackSliderStyles = makeStyles((theme: Theme) =>
             width: "100%",
             zIndex: 1,
         },
+        bar: {
+            transition: "0s"
+        },
         sliderRail: {
             backgroundColor: "transparent"
         },

@@ -6,7 +6,7 @@ import {I<%= name %>State} from "./state";
 import produce from "immer";
 import {<%= name.toUpperCase() %>_EXAMPLE} from "./constants";
 
-export const reducerName = 'Test';
+export const reducerName = '<%= name %>';
 
 const initialState: I<%= name %>State = {
   example: "test"

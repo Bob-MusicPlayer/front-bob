@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {connect} from "react-redux";
 import {Dispatch} from "redux";
 import {ISearchState} from "./state";
@@ -31,14 +31,16 @@ const SearchContainer: React.FC<ISearchContainerProps> = (props: ISearchContaine
     const {example} = props;
     const classes = SearchStyles();
 
+    const [source, setSource] = useState<string>("all");
+
     return (
         <Container fixed>
             <Box marginY={4}>
                 <Typography variant="h4" className={classes.header}>Search</Typography>
                 <Typography variant="subtitle1">Search for Songs among different Players</Typography>
                 <Box marginTop={2} marginBottom={1} width="100%" display="flex">
-                    <Select input={<OutlinedInput labelWidth={0} value={"all"} defaultValue={"all"} name="age"
-                                                            id="outlined-age-simple"/>}>
+                    <Select value={source} onChange={(e) => setSource(e.target.value as string)} input={<OutlinedInput labelWidth={0} name="age"
+                                                  id="outlined-age-simple"/>}>
                         <MenuItem value="all">All</MenuItem>
                         <MenuItem value="youtube">Youtube</MenuItem>
                         <MenuItem value="mpd">MPD</MenuItem>
@@ -51,10 +53,10 @@ const SearchContainer: React.FC<ISearchContainerProps> = (props: ISearchContaine
                     <Button variant="contained" color="primary">Search</Button>
                 </Box>
                 <Tabs textColor="primary" variant="standard" indicatorColor="primary" value={0}>
-                    <Tab label="Youtube" />
-                    <Tab label="Mpd" />
+                    <Tab label="Youtube"/>
+                    <Tab label="Mpd"/>
                 </Tabs>
-                <Divider />
+                <Divider/>
             </Box>
         </Container>
     );

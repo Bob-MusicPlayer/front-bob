@@ -1,1 +1,1 @@
-export const SEARCH_EXAMPLE = "app/Search/EXAMPLE";
+export const SEARCH = "app/Search/SEARCH";

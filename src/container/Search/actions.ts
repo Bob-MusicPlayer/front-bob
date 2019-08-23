@@ -1,9 +1,9 @@
 import {AnyAction} from "redux";
-import {SEARCH_EXAMPLE} from "./constants";
+import {SEARCH} from "./constants";
 
 export function SetExample(text: string): AnyAction {
     return {
-        type: SEARCH_EXAMPLE,
+        type: SEARCH,
         text
     }
 }

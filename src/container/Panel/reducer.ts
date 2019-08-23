@@ -3,7 +3,7 @@ import {IPanelState} from "./state";
 import produce from "immer";
 import {PANEL_EXAMPLE} from "./constants";
 
-export const reducerName = 'Test';
+export const reducerName = 'Panel';
 
 const initialState: IPanelState = {
   example: "test"

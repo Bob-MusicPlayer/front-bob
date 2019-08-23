@@ -8,22 +8,26 @@ import ShuffleIcon from "@material-ui/icons/ShuffleRounded";
 import RepeateIcon from "@material-ui/icons/RepeatRounded";
 import VolumeUpIcon from "@material-ui/icons/VolumeUpRounded";
 import VolumeDownIcon from "@material-ui/icons/VolumeDownRounded";
-import {SetExample} from "./actions";
+import PauseIcon from "@material-ui/icons/PauseRounded";
 import ReducerRegistry from "../../utils/reducerRegistry";
 import reducer, {reducerName} from "./reducer";
 import {Box, Card, Fab, IconButton, Popover, Slider, Typography} from "@material-ui/core";
 import {PlayerControlsStyles} from "./styles";
 import PlaybackSlider from "../../components/PlaybackSlider";
+import {IPlayerControlsState, Playback} from "./state";
+import {Pause, Play, Seek} from "./actions";
 
 interface IPlayerControlsContainerProps {
-    example: string,
-    setExample: () => {}
+    isPlaying: boolean,
+    playback: Playback,
+    onSeek: (time: number) => void,
+    onPlayPause: (isPlaying: boolean) => void,
 }
 
 ReducerRegistry.register(reducerName, reducer);
 
 const PlayerControlsContainer: React.FC<IPlayerControlsContainerProps> = (props: IPlayerControlsContainerProps) => {
-    const {example} = props;
+    const {isPlaying, playback, onSeek, onPlayPause} = props;
     const classes = PlayerControlsStyles();
 
     const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
@@ -44,7 +48,7 @@ const PlayerControlsContainer: React.FC<IPlayerControlsContainerProps> = (props:
                 <Box display="flex" alignItems="center" marginRight={4}>
                     <Box margin={2} borderRadius={8} overflow="hidden">
                         <div style={{
-                            backgroundImage: "url(https://picsum.photos/536/354)",
+                            backgroundImage: "url(" + playback.thumbnailUrl + ")",
                             backgroundSize: "cover",
                             backgroundPosition: "center center",
                             height: 52,
@@ -52,18 +56,19 @@ const PlayerControlsContainer: React.FC<IPlayerControlsContainerProps> = (props:
                         }}/>
                     </Box>
                     <div>
-                        <Typography className={classes.title} variant="h5" color="textPrimary">N.O.W. (Uraz Kurt
-                            Remix)</Typography>
-                        <Typography variant="subtitle1" color="textSecondary">Uptown Funk Empire</Typography>
+                        <Typography className={classes.title} variant="h5" color="textPrimary">{playback.title}</Typography>
+                        <Typography variant="subtitle1" color="textSecondary">{playback.author}</Typography>
                     </div>
                 </Box>
                 <Box>
                     <IconButton><PreviousIcon/></IconButton>
-                    <Fab size="medium" color="primary"><PlayIcon/></Fab>
+                    <Fab onClick={() => onPlayPause(isPlaying)} size="medium" color="primary">
+                        {isPlaying ? <PauseIcon /> : <PlayIcon />}
+                    </Fab>
                     <IconButton><NextIcon/></IconButton>
                 </Box>
                 <Box flexGrow={1} marginX={4}>
-                    <PlaybackSlider/>
+                    <PlaybackSlider onValueChanged={onSeek} max={playback.duration} value={playback.position} buffer={playback.cachePosition}/>
                 </Box>
                 <Box>
                     <IconButton><ShuffleIcon/></IconButton>
@@ -101,16 +106,24 @@ const PlayerControlsContainer: React.FC<IPlayerControlsContainerProps> = (props:
 };
 
 const mapStateToProps = (state: any) => {
-    const reducerState = state[reducerName];
+    const reducerState: IPlayerControlsState = state[reducerName];
 
     return {
-        example: reducerState.example
+        isPlaying: reducerState.isPlaying,
+        playback: reducerState.playback
     };
 };
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
     return {
-        setExample: () => dispatch(SetExample("playercontrols"))
+        onSeek: (time: number) => dispatch(Seek(time)),
+        onPlayPause: (isPlaying: boolean) => {
+            if (isPlaying) {
+                dispatch(Pause())
+            } else {
+                dispatch(Play())
+            }
+        }
     };
 };
 

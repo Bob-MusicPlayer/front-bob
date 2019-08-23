@@ -1,9 +1,35 @@
 import {AnyAction} from "redux";
-import {PLAYERCONTROLS_EXAMPLE} from "./constants";
+import {SET_PLAYBACK_INFO, SEEK, IS_PLAYING, PLAY, PAUSE} from "./constants";
 
-export function SetExample(text: string): AnyAction {
+export function Play(): AnyAction {
     return {
-        type: PLAYERCONTROLS_EXAMPLE,
-        text
+        type: PLAY
+    }
+}
+
+export function Pause(): AnyAction {
+    return {
+        type: PAUSE
+    }
+}
+
+export function IsPlaying(playing: boolean): AnyAction {
+    return {
+        type: IS_PLAYING,
+        playing
+    }
+}
+
+export function SetPlaybackInfo(info: any): AnyAction {
+    return {
+        type: SET_PLAYBACK_INFO,
+        info
+    }
+}
+
+export function Seek(time: number): AnyAction {
+    return {
+        type: SEEK,
+        time
     }
 }

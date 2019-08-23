@@ -1,3 +1,3 @@
 export interface ISearchState {
-    example: string;
+    loading: boolean;
 }

@@ -28,7 +28,7 @@ const PanelContainer: React.FC<IPanelContainerProps> = (props: IPanelContainerPr
             </div>
             <div className={classes.content}>
                 <Switch>
-                    <Route path="/" exact component={SearchContainer} />
+                     <Route path="/" exact component={SearchContainer}/>
                 </Switch>
             </div>
             <div className={classes.playerControls}>

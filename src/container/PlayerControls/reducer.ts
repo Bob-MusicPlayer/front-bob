@@ -1,19 +1,44 @@
+import {PAUSE, PLAY, SEEK, SET_PLAYBACK_INFO} from "./constants";
 import {AnyAction} from "redux";
 import {IPlayerControlsState} from "./state";
 import produce from "immer";
-import {PLAYERCONTROLS_EXAMPLE} from "./constants";
+import {IS_PLAYING} from "./constants";
 
-export const reducerName = 'Test';
+export const reducerName = 'PlayerControls';
 
 const initialState: IPlayerControlsState = {
-  example: "test"
+    isPlaying: false,
+    playback: {
+        author: "",
+        cachePosition: 0,
+        duration: 0,
+        id: "",
+        paused: true,
+        position: 0,
+        source: "",
+        thumbnailUrl: "",
+        title: ""
+    }
 };
 
 export default function reducer(state = initialState, action: AnyAction) {
     return produce(state, (draft: IPlayerControlsState) => {
         switch (action.type) {
-            case PLAYERCONTROLS_EXAMPLE:
-                draft.example = action.text;
+            case IS_PLAYING:
+                draft.isPlaying = action.playing;
+                break;
+            case SET_PLAYBACK_INFO:
+                draft.playback = action.info.playback;
+                draft.isPlaying = action.info.isPlaying;
+                break;
+            case SEEK:
+                draft.playback.position = action.time;
+                break;
+            case PLAY:
+                draft.isPlaying = true;
+                break;
+            case PAUSE:
+                draft.isPlaying = false;
                 break;
             default:
                 return state;
