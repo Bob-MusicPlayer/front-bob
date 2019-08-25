@@ -27,9 +27,9 @@ export function SetPlaybackInfo(info: any): AnyAction {
     }
 }
 
-export function Seek(time: number): AnyAction {
+export function Seek(seconds: number): AnyAction {
     return {
         type: SEEK,
-        time
+        seconds
     }
 }

@@ -9,6 +9,7 @@ import ApplicationDrawer from "../../components/ApplicationDrawer";
 import PlayerControlsContainer from "../PlayerControls";
 import {Switch, Route} from "react-router-dom";
 import SearchContainer from "../Search";
+import {Box} from "@material-ui/core";
 
 interface IPanelContainerProps {
     example: string,
@@ -22,19 +23,19 @@ const PanelContainer: React.FC<IPanelContainerProps> = (props: IPanelContainerPr
     const {example, setExample} = props;
 
     return (
-        <div className={classes.gridContainer}>
-            <div className={classes.nav}>
+        <Box height="100%">
+            <Box display="flex" height="100%">
                 <ApplicationDrawer/>
-            </div>
-            <div className={classes.content}>
-                <Switch>
-                     <Route path="/" exact component={SearchContainer}/>
-                </Switch>
-            </div>
-            <div className={classes.playerControls}>
-                <PlayerControlsContainer />
-            </div>
-        </div>
+                <Box flexGrow={1} overflow="auto" paddingBottom="84px">
+                    <Switch>
+                        <Route path="/" exact component={SearchContainer}/>
+                    </Switch>
+                </Box>
+            </Box>
+            <Box position="absolute" bottom={0} width="100%" zIndex={1200}>
+                <PlayerControlsContainer/>
+            </Box>
+        </Box>
     );
 };
 

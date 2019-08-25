@@ -45,15 +45,21 @@ const PlayerControlsContainer: React.FC<IPlayerControlsContainerProps> = (props:
     const open = Boolean(anchorEl);
 
     return (
-        <Card elevation={4}>
+        <Card elevation={4} classes={{
+            root: classes.card
+        }}>
             <Box display="flex" width="100%" paddingX={2} justifyContent="space-between" alignItems="center">
                 <Box display="flex" alignItems="center" marginRight={4}>
-                    <Thumbnail thumbnailUrl={playback.thumbnailUrl}/>
-                    <div>
-                        <Typography className={classes.title} variant="h5"
+                    {
+                        playback.thumbnailUrl !== undefined ?
+                            <Thumbnail thumbnailUrl={playback.thumbnailUrl}/>
+                            : null
+                    }
+                    <Box maxWidth="300px">
+                        <Typography classes={{root: classes.title}} variant="h5"
                                     color="textPrimary">{playback.title}</Typography>
                         <Typography variant="subtitle1" color="textSecondary">{playback.author}</Typography>
-                    </div>
+                    </Box>
                 </Box>
                 <Box>
                     <IconButton><PreviousIcon/></IconButton>
@@ -63,8 +69,13 @@ const PlayerControlsContainer: React.FC<IPlayerControlsContainerProps> = (props:
                     <IconButton><NextIcon/></IconButton>
                 </Box>
                 <Box flexGrow={1} marginX={4}>
-                    <PlaybackSlider onValueChanged={onSeek} max={playback.duration} value={playback.position}
-                                    buffer={playback.cachePosition}/>
+                    {
+                        playback.duration !== undefined && playback.position !== undefined && playback.cachePosition !== undefined ?
+                            <PlaybackSlider onValueChanged={onSeek} max={playback.duration} value={playback.position}
+                                            buffer={playback.cachePosition}/>
+                            : null
+                    }
+
                 </Box>
                 <Box>
                     <IconButton><ShuffleIcon/></IconButton>

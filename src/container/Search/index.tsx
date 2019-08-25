@@ -22,11 +22,14 @@ import {SearchStyles} from "./styles";
 import {SearchResponse} from "../../models/SearchResponse.model";
 import {act, Simulate} from "react-dom/test-utils";
 import Thumbnail from "../../components/Thumbnail";
+import {Playback} from "../../models/Playback.model";
+import {SetPlayback} from "../../utils/globalActions";
 
 interface ISearchContainerProps {
     onSearch: (query: string) => void,
     loading: boolean,
     results: SearchResponse,
+    onSetPlayback: (playback: Playback) => void
 }
 
 ReducerRegistry.register(reducerName, reducer);
@@ -38,7 +41,7 @@ interface TabPanelProps {
 }
 
 function TabPanel(props: TabPanelProps) {
-    const { children, value, index, ...other } = props;
+    const {children, value, index, ...other} = props;
 
     return (
         <Typography
@@ -49,13 +52,20 @@ function TabPanel(props: TabPanelProps) {
             aria-labelledby={`simple-tab-${index}`}
             {...other}
         >
-            <Box p={3}>{children}</Box>
+            {children}
         </Typography>
     );
 }
 
+function PlaybackFromIdAndSource(id: string, source: string): Playback {
+    return {
+        id: id,
+        source: source,
+    }
+}
+
 const SearchContainer: React.FC<ISearchContainerProps> = (props: ISearchContainerProps) => {
-    const {onSearch, loading, results} = props;
+    const {onSearch, loading, results, onSetPlayback} = props;
     const classes = SearchStyles();
 
     const [source, setSource] = useState<string>("all");
@@ -96,18 +106,22 @@ const SearchContainer: React.FC<ISearchContainerProps> = (props: ISearchContaine
                             <Tabs textColor="primary" variant="standard" indicatorColor="primary" value={activeTab}
                                   onChange={(e, v) => setActiveTab(v)}>
                                 {
-                                    Object.keys(results).map(x => <Tab label={x} />)
+                                    Object.keys(results).map(x => <Tab label={x}/>)
                                 }
                             </Tabs>
                             <Divider/>
                             {
                                 Object.keys(results).map((x, i) => <TabPanel value={activeTab} index={i}>
-                                    <List>
-                                        {results[x].playbacks.map(playback => <ListItem button>
+                                    <List dense>
+                                        {results[x].playbacks.map(playback => <ListItem button onClick={() => onSetPlayback(playback)}>
                                             <ListItemAvatar>
-                                                <Thumbnail thumbnailUrl={playback.thumbnailUrl}/>
+                                                {
+                                                    playback.thumbnailUrl !== undefined ?
+                                                    <Thumbnail thumbnailUrl={playback.thumbnailUrl}/>
+                                                    : null
+                                                }
                                             </ListItemAvatar>
-                                            <ListItemText primary={playback.title} secondary={playback.author} />
+                                            <ListItemText primary={playback.title} secondary={playback.author}/>
                                         </ListItem>)}
                                     </List>
                                 </TabPanel>)
@@ -131,7 +145,8 @@ const mapStateToProps = (state: any) => {
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
     return {
-        onSearch: (query: string) => dispatch(Search(query))
+        onSearch: (query: string) => dispatch(Search(query)),
+        onSetPlayback: (playback: Playback) => dispatch(SetPlayback(playback))
     };
 };
 
