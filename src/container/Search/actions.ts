@@ -1,9 +1,17 @@
 import {AnyAction} from "redux";
-import {SEARCH} from "./constants";
+import {SEARCH, SEARCH_SUCCEED} from "./constants";
+import {SearchResponse} from "../../models/SearchResponse.model";
 
-export function SetExample(text: string): AnyAction {
+export function Search(query: string): AnyAction {
     return {
         type: SEARCH,
-        text
+        query
+    }
+}
+
+export function SearchSucceed(results: SearchResponse): AnyAction {
+    return {
+        type: SEARCH_SUCCEED,
+        results
     }
 }

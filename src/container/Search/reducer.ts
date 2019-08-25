@@ -1,12 +1,14 @@
 import {AnyAction} from "redux";
 import {ISearchState} from "./state";
 import produce from "immer";
-import {SEARCH} from "./constants";
+import {SEARCH, SEARCH_SUCCEED} from "./constants";
+import {SearchResponse} from "../../models/SearchResponse.model";
 
 export const reducerName = 'Search';
 
 const initialState: ISearchState = {
     loading: false,
+    results: {},
 };
 
 export default function reducer(state = initialState, action: AnyAction) {
@@ -14,6 +16,10 @@ export default function reducer(state = initialState, action: AnyAction) {
         switch (action.type) {
             case SEARCH:
                 draft.loading = true;
+                break;
+            case SEARCH_SUCCEED:
+                draft.loading = false;
+                draft.results = action.results;
                 break;
             default:
                 return state;

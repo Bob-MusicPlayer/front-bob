@@ -14,8 +14,10 @@ import reducer, {reducerName} from "./reducer";
 import {Box, Card, Fab, IconButton, Popover, Slider, Typography} from "@material-ui/core";
 import {PlayerControlsStyles} from "./styles";
 import PlaybackSlider from "../../components/PlaybackSlider";
-import {IPlayerControlsState, Playback} from "./state";
+import {IPlayerControlsState} from "./state";
 import {Pause, Play, Seek} from "./actions";
+import Thumbnail from "../../components/Thumbnail";
+import {Playback} from "../../models/Playback.model";
 
 interface IPlayerControlsContainerProps {
     isPlaying: boolean,
@@ -46,29 +48,23 @@ const PlayerControlsContainer: React.FC<IPlayerControlsContainerProps> = (props:
         <Card elevation={4}>
             <Box display="flex" width="100%" paddingX={2} justifyContent="space-between" alignItems="center">
                 <Box display="flex" alignItems="center" marginRight={4}>
-                    <Box margin={2} borderRadius={8} overflow="hidden">
-                        <div style={{
-                            backgroundImage: "url(" + playback.thumbnailUrl + ")",
-                            backgroundSize: "cover",
-                            backgroundPosition: "center center",
-                            height: 52,
-                            width: 52
-                        }}/>
-                    </Box>
+                    <Thumbnail thumbnailUrl={playback.thumbnailUrl}/>
                     <div>
-                        <Typography className={classes.title} variant="h5" color="textPrimary">{playback.title}</Typography>
+                        <Typography className={classes.title} variant="h5"
+                                    color="textPrimary">{playback.title}</Typography>
                         <Typography variant="subtitle1" color="textSecondary">{playback.author}</Typography>
                     </div>
                 </Box>
                 <Box>
                     <IconButton><PreviousIcon/></IconButton>
                     <Fab onClick={() => onPlayPause(isPlaying)} size="medium" color="primary">
-                        {isPlaying ? <PauseIcon /> : <PlayIcon />}
+                        {isPlaying ? <PauseIcon/> : <PlayIcon/>}
                     </Fab>
                     <IconButton><NextIcon/></IconButton>
                 </Box>
                 <Box flexGrow={1} marginX={4}>
-                    <PlaybackSlider onValueChanged={onSeek} max={playback.duration} value={playback.position} buffer={playback.cachePosition}/>
+                    <PlaybackSlider onValueChanged={onSeek} max={playback.duration} value={playback.position}
+                                    buffer={playback.cachePosition}/>
                 </Box>
                 <Box>
                     <IconButton><ShuffleIcon/></IconButton>
@@ -88,7 +84,7 @@ const PlayerControlsContainer: React.FC<IPlayerControlsContainerProps> = (props:
                         }}
                     >
                         <Box height={250} display="flex" flexDirection="column" padding={3}>
-                            <VolumeUpIcon className={classes.textSecondary} />
+                            <VolumeUpIcon className={classes.textSecondary}/>
                             <Box marginY={1} flexGrow={1}>
                                 <Slider
                                     orientation="vertical"
@@ -96,7 +92,7 @@ const PlayerControlsContainer: React.FC<IPlayerControlsContainerProps> = (props:
                                     aria-labelledby="vertical-slider"
                                 />
                             </Box>
-                            <VolumeDownIcon className={classes.textSecondary} />
+                            <VolumeDownIcon className={classes.textSecondary}/>
                         </Box>
                     </Popover>
                 </Box>
