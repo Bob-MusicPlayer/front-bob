@@ -53,6 +53,9 @@ function* SetPlayback(action: AnyAction) {
 }
 
 function* Seek(action: AnyAction) {
+    if (!action.sync) {
+        return
+    }
     const seconds = Math.round(action.seconds);
 
     try {

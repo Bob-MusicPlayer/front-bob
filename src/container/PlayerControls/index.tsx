@@ -1,5 +1,5 @@
-import React from "react";
-import {connect} from "react-redux";
+import React, {useEffect} from "react";
+import {connect, useDispatch, useStore} from "react-redux";
 import {Dispatch} from "redux";
 import PreviousIcon from "@material-ui/icons/SkipPreviousRounded";
 import NextIcon from "@material-ui/icons/SkipNextRounded";
@@ -18,6 +18,7 @@ import {IPlayerControlsState} from "./state";
 import {Pause, Play, Seek} from "./actions";
 import Thumbnail from "../../components/Thumbnail";
 import {Playback} from "../../models/Playback.model";
+import {PlayerController} from "./playerController";
 
 interface IPlayerControlsContainerProps {
     isPlaying: boolean,
@@ -32,6 +33,9 @@ const PlayerControlsContainer: React.FC<IPlayerControlsContainerProps> = (props:
     const {isPlaying, playback, onSeek, onPlayPause} = props;
     const classes = PlayerControlsStyles();
 
+    const dispatch = useDispatch();
+    const store = useStore();
+
     const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
 
     function handleClick(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
@@ -41,6 +45,11 @@ const PlayerControlsContainer: React.FC<IPlayerControlsContainerProps> = (props:
     function handleClose() {
         setAnchorEl(null)
     }
+
+    useEffect(() => {
+        console.log("lolo");
+        const playerController = new PlayerController(dispatch, store);
+    }, []);
 
     const open = Boolean(anchorEl);
 
@@ -62,17 +71,17 @@ const PlayerControlsContainer: React.FC<IPlayerControlsContainerProps> = (props:
                     </Box>
                 </Box>
                 <Box>
-                    <IconButton><PreviousIcon/></IconButton>
-                    <Fab onClick={() => onPlayPause(isPlaying)} size="medium" color="primary">
+                    <IconButton href="#4"><PreviousIcon/></IconButton>
+                    <Fab onClick={() => onPlayPause(isPlaying)} size="medium" color="primary" href="#">
                         {isPlaying ? <PauseIcon/> : <PlayIcon/>}
                     </Fab>
-                    <IconButton><NextIcon/></IconButton>
+                    <IconButton href="#"><NextIcon/></IconButton>
                 </Box>
                 <Box flexGrow={1} marginX={4}>
                     {
                         playback.duration !== undefined && playback.position !== undefined && playback.cachePosition !== undefined ?
-                            <PlaybackSlider onValueChanged={onSeek} max={playback.duration} value={playback.position}
-                                            buffer={playback.cachePosition}/>
+                            <PlaybackSlider onValueChanged={(value: number) => onSeek(value)} max={playback.duration} value={playback.position}
+                                            buffer={playback.cachePosition} isPaused={playback.paused as boolean}/>
                             : null
                     }
 

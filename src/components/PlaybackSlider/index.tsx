@@ -1,19 +1,24 @@
 import * as React from "react";
 import {Box, LinearProgress, Slider, Typography} from "@material-ui/core";
 import {PlaybackSliderStyles} from "./styles";
-import {useState} from "react";
+import {MouseEventHandler, useEffect, useState} from "react";
+import {MouseEvent} from "react";
 
 interface IPlaybackSliderProps {
     value: number,
     buffer?: number,
     max: number,
-    onValueChanged: (value: number) => void
+    onValueChanged: (value: number) => void,
+    isPaused: boolean,
 }
 
 const PlaybackSlider: React.FC<IPlaybackSliderProps> = (props: IPlaybackSliderProps) => {
     const classes = PlaybackSliderStyles();
 
-    const {value, buffer, max, onValueChanged} = props;
+    const {value, buffer, max, onValueChanged, isPaused} = props;
+
+    const [progress, setProgress] = useState<number>(0);
+    const [sliderChanging, setSliderChanging] = useState<boolean>(false);
 
     function prependZero(seconds: number): string {
         if (seconds < 10) {
@@ -23,17 +28,55 @@ const PlaybackSlider: React.FC<IPlaybackSliderProps> = (props: IPlaybackSliderPr
         }
     }
 
+    function mouseupListener (e: Event) {
+        document.removeEventListener('mouseup', mouseupListener);
+        setSliderChanging(false);
+        e.stopPropagation();
+    }
+
+    function captureMouseUp (e: MouseEvent) {
+        document.addEventListener('mouseup', mouseupListener);
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    useEffect(() => {
+        if (!sliderChanging) {
+            onValueChanged(progress);
+        }
+    }, [sliderChanging]);
+
+    useEffect(() => {
+        if (!sliderChanging) {
+            setProgress(value);
+        }
+    }, [value]);
+
     return (
         <Box display="flex" alignItems="center" width="100%">
             <Box display="flex" alignItems="center" flexGrow={1} marginRight={2} position="relative">
-                <Slider className={classes.slider} classes={{
-                    rail: classes.sliderRail,
-                    track: classes.sliderTrack,
-                    thumb: classes.sliderThumb,
-                }} value={value} max={max} step={0.01} onChange={(e, value) => onValueChanged(value as number)} />
-                <LinearProgress className={classes.progress} classes={{bar: classes.bar}} value={value==max?0:(value/max)*100} variant="buffer" valueBuffer={buffer?(buffer/max)*100:100}/>
+                <Slider className={classes.slider}
+                        classes={{
+                            rail: classes.sliderRail,
+                            track: classes.sliderTrack,
+                            thumb: classes.sliderThumb,
+                        }}
+                        value={progress}
+                        onMouseUp={() => {
+                            setSliderChanging(false);
+                        }}
+                        onMouseDown={() => setSliderChanging(true)}
+                        onMouseLeave={captureMouseUp}
+                        max={max}
+                        step={0.01}
+                        onChange={(e, v) => {
+                            return setProgress(v as number);
+                        }}/>
+                <LinearProgress className={classes.progress} classes={{bar: classes.bar}}
+                                value={progress == max ? 0 : (progress / max) * 100} variant="buffer"
+                                valueBuffer={buffer ? (buffer / max) * 100 : 100}/>
             </Box>
-            <Typography>{prependZero(Math.floor(value/60))}:{prependZero(Math.floor((value%60)))}</Typography>
+            <Typography>{prependZero(Math.floor(progress / 60))}:{prependZero(Math.floor((progress % 60)))}</Typography>
         </Box>
     );
 };

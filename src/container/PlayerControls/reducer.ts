@@ -32,7 +32,7 @@ export default function reducer(state = initialState, action: AnyAction) {
                 draft.isPlaying = action.info.isPlaying;
                 break;
             case SEEK:
-                draft.playback.position = action.time;
+                draft.playback.position = action.seconds;
                 break;
             case PLAY:
                 draft.isPlaying = true;

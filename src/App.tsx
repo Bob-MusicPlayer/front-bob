@@ -7,7 +7,7 @@ import {ThemeProvider} from '@material-ui/styles';
 import {AppTheme} from "./theme";
 import {CssBaseline} from "@material-ui/core";
 import {BrowserRouter} from "react-router-dom";
-import {IsPlaying, Play, SetPlaybackInfo} from "./container/PlayerControls/actions";
+import {IsPlaying, Play, Seek, SetPlaybackInfo} from "./container/PlayerControls/actions";
 
 const e1 = new EventSource('http://localhost:5002/api/v1/events');
 e1.onerror = () => {
@@ -27,8 +27,12 @@ e1.onmessage = (event) => {
                 store.dispatch(SetPlaybackInfo(data.payload));
             }
             break;
+        case "seek":
+            store.dispatch(Seek(data.payload, false));
+            break;
         default:
             console.warn("Got unknown event: " + data.event);
+            break;
     }
 };
 
