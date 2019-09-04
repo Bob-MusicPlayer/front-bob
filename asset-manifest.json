@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "https://bob-musicplayer.github.io/front-bob/static/css/main.f6296f07.chunk.css",
+    "main.js": "https://bob-musicplayer.github.io/front-bob/static/js/main.c017dc56.chunk.js",
+    "main.js.map": "https://bob-musicplayer.github.io/front-bob/static/js/main.c017dc56.chunk.js.map",
+    "runtime~main.js": "https://bob-musicplayer.github.io/front-bob/static/js/runtime~main.5dc0a981.js",
+    "runtime~main.js.map": "https://bob-musicplayer.github.io/front-bob/static/js/runtime~main.5dc0a981.js.map",
+    "static/js/2.92c8a8ff.chunk.js": "https://bob-musicplayer.github.io/front-bob/static/js/2.92c8a8ff.chunk.js",
+    "static/js/2.92c8a8ff.chunk.js.map": "https://bob-musicplayer.github.io/front-bob/static/js/2.92c8a8ff.chunk.js.map",
+    "index.html": "https://bob-musicplayer.github.io/front-bob/index.html",
+    "precache-manifest.61048deba1526e15b52d74b2fab48ef8.js": "https://bob-musicplayer.github.io/front-bob/precache-manifest.61048deba1526e15b52d74b2fab48ef8.js",
+    "service-worker.js": "https://bob-musicplayer.github.io/front-bob/service-worker.js",
+    "static/css/main.f6296f07.chunk.css.map": "https://bob-musicplayer.github.io/front-bob/static/css/main.f6296f07.chunk.css.map"
+  }
+}
