@@ -14,3 +14,4 @@ deploy:
   file: build/build.zip
   on:
     repo: Bob-MusicPlayer/front-bob
+    all_branches: true
