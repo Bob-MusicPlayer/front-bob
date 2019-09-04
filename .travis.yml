@@ -21,6 +21,7 @@ deploy:
     github_token:
       secure: DxPVJQZcVbn/uLx3qOk4eKmB/10BabM3sG6schxKxHr53un7J1/V0QFxmlXVCg7Xf8cGEkzs+UETgc4i3GL0lZtS/DQ5xpfwJNUZ3+XfymQ0x7OsDiaK83/ohKBH3j0R+qbUESzlY2F2FSfMQxhj9Fv7Xkg6bZaiURrq7MHmbDJQtW1hXI3W3+8Ye9rXnveenITK5wo/N2idUu+oJeat3Lk5NBtCbE7AkXSws2OC9Za/Rll33lS/8lKoVSzxRyvOaPLy2z4004OL1ZgHzxmr73HNd4amkkvyCBTU66f9X/n6DV+tV5OiFbW0mn37DCTuVgNAex8bPecOZFvjWuALwjRfT5nqTwzbZ1AWux3MisOC2QuTPoBqo+AhA0kgeVFdQwkLhfkCtVDOJYuXNd1+/3VjO55MA/mynbC3tvAiPEu2Hg3xtb+TAkZXyIleWilZvgIGrAVT8ZNWkP6zABQVAc20sbyV6KNEi1eCHZSUWitB6IRHbT8F7dpYcgPzbvLUKiCTftXyilnb28/awNUVuXMfOKy28U2b8+Py3yNgrXj3a7Hkv+pRcHH8KU/fSdzOF54Cm6pCXBO1O7BidfKSIBwF4Oq/OW7JnpfxhPaF8oTQ3EIt1rAoA8/UPoE5ozz4hv38e88/J7kK/Zc3Ani/6WWTBZAaF0t5g3pXOMDcHmg=
     target-branch: gh-pages
+    local-dir: build
     verbose: true
     on:
       repo: Bob-MusicPlayer/front-bob
