@@ -9,7 +9,7 @@ import {CssBaseline} from "@material-ui/core";
 import {BrowserRouter} from "react-router-dom";
 import {IsPlaying, Play, Seek, SetPlaybackInfo} from "./container/PlayerControls/actions";
 
-const e1 = new EventSource('http://localhost:5002/api/v1/events');
+const e1 = new EventSource('http://192.168.11.241:5002/api/v1/events');
 e1.onerror = () => {
     console.log("sef")
 };
@@ -23,7 +23,7 @@ e1.onmessage = (event) => {
             store.dispatch(IsPlaying(false));
             break;
         case "sync":
-            if (data.payload.playback != null) {
+            if (data.payload.playback != null && store.getState()) {
                 store.dispatch(SetPlaybackInfo(data.payload));
             }
             break;

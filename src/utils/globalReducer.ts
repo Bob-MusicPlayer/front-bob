@@ -1,6 +1,7 @@
 import {AnyAction} from "redux";
 import produce from "immer";
 import {IGlobalState} from "./globalState";
+import {SET_PLAYBACK} from "./globalConstants";
 
 const reducerName = 'global';
 

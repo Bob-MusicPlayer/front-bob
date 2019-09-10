@@ -5,9 +5,10 @@ import {SEARCH} from "../container/Search/constants";
 import {AnyAction} from "redux";
 import {SearchResponse} from "../models/SearchResponse.model";
 import {SearchSucceed} from "../container/Search/actions";
-import {SET_PLAYBACK} from "../utils/globalConstants";
+import {PLAYBACK_SET, SET_PLAYBACK, SYNC} from "../utils/globalConstants";
+import {PlaybackSet, Sync as PlayerSync} from "../utils/globalActions";
 
-const baseUrl: string = "http://localhost:5002/api/v1/";
+const baseUrl: string = "http://192.168.11.241:5002/api/v1/";
 
 function* Play() {
     try {
@@ -47,6 +48,8 @@ function* SetPlayback(action: AnyAction) {
 
     try {
         yield call(fetch, baseUrl + "playback", {method: "POST", body: data});
+        yield put(PlayerSync());
+        yield put(PlaybackSet())
     } catch (e) {
         console.log(e);
     }
@@ -65,13 +68,22 @@ function* Seek(action: AnyAction) {
     }
 }
 
+function* Sync() {
+    try {
+        yield call(fetch, baseUrl + "sync", {method: "POST"});
+    } catch (e) {
+        console.log(e);
+    }
+}
+
 function* rootSaga() {
     yield all([
         takeLatest(PLAY, Play),
         takeLatest(PAUSE, Pause),
         takeLatest(SEARCH, Search),
         takeLatest(SET_PLAYBACK, SetPlayback),
-        takeLatest(SEEK, Seek)
+        takeLatest(SEEK, Seek),
+        takeLatest(SYNC, Sync)
     ]);
 }
 

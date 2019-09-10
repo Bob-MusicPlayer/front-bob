@@ -11,7 +11,7 @@ import VolumeDownIcon from "@material-ui/icons/VolumeDownRounded";
 import PauseIcon from "@material-ui/icons/PauseRounded";
 import ReducerRegistry from "../../utils/reducerRegistry";
 import reducer, {reducerName} from "./reducer";
-import {Box, Card, Fab, IconButton, Popover, Slider, Typography} from "@material-ui/core";
+import {Box, Card, CircularProgress, Fab, IconButton, Popover, Slider, Typography} from "@material-ui/core";
 import {PlayerControlsStyles} from "./styles";
 import PlaybackSlider from "../../components/PlaybackSlider";
 import {IPlayerControlsState} from "./state";
@@ -19,18 +19,21 @@ import {Pause, Play, Seek} from "./actions";
 import Thumbnail from "../../components/Thumbnail";
 import {Playback} from "../../models/Playback.model";
 import {PlayerController} from "./playerController";
+import {Sync} from "../../utils/globalActions";
 
 interface IPlayerControlsContainerProps {
     isPlaying: boolean,
+    isLoading: boolean,
     playback: Playback,
     onSeek: (time: number) => void,
     onPlayPause: (isPlaying: boolean) => void,
+    onSync: () => void,
 }
 
 ReducerRegistry.register(reducerName, reducer);
 
 const PlayerControlsContainer: React.FC<IPlayerControlsContainerProps> = (props: IPlayerControlsContainerProps) => {
-    const {isPlaying, playback, onSeek, onPlayPause} = props;
+    const {isPlaying, playback, onSeek, onPlayPause, isLoading, onSync} = props;
     const classes = PlayerControlsStyles();
 
     const dispatch = useDispatch();
@@ -47,7 +50,7 @@ const PlayerControlsContainer: React.FC<IPlayerControlsContainerProps> = (props:
     }
 
     useEffect(() => {
-        console.log("lolo");
+        onSync();
         const playerController = new PlayerController(dispatch, store);
     }, []);
 
@@ -70,7 +73,7 @@ const PlayerControlsContainer: React.FC<IPlayerControlsContainerProps> = (props:
                         <Typography variant="subtitle1" color="textSecondary">{playback.author}</Typography>
                     </Box>
                 </Box>
-                <Box>
+                <Box display="flex">
                     <IconButton href="#4"><PreviousIcon/></IconButton>
                     <Fab onClick={() => onPlayPause(isPlaying)} size="medium" color="primary" href="#">
                         {isPlaying ? <PauseIcon/> : <PlayIcon/>}
@@ -80,7 +83,8 @@ const PlayerControlsContainer: React.FC<IPlayerControlsContainerProps> = (props:
                 <Box flexGrow={1} marginX={4}>
                     {
                         playback.duration !== undefined && playback.position !== undefined && playback.cachePosition !== undefined ?
-                            <PlaybackSlider onValueChanged={(value: number) => onSeek(value)} max={playback.duration} value={playback.position}
+                            <PlaybackSlider onValueChanged={(value: number) => onSeek(value)} isLoading={isLoading} max={playback.duration}
+                                            value={playback.position}
                                             buffer={playback.cachePosition} isPaused={playback.paused as boolean}/>
                             : null
                     }
@@ -126,12 +130,14 @@ const mapStateToProps = (state: any) => {
 
     return {
         isPlaying: reducerState.isPlaying,
+        isLoading: reducerState.isLoading,
         playback: reducerState.playback
     };
 };
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
     return {
+        onSync: () => dispatch(Sync()),
         onSeek: (time: number) => dispatch(Seek(time)),
         onPlayPause: (isPlaying: boolean) => {
             if (isPlaying) {

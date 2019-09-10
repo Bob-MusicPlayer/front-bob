@@ -10,14 +10,15 @@ interface IPlaybackSliderProps {
     max: number,
     onValueChanged: (value: number) => void,
     isPaused: boolean,
+    isLoading: boolean,
 }
 
 const PlaybackSlider: React.FC<IPlaybackSliderProps> = (props: IPlaybackSliderProps) => {
     const classes = PlaybackSliderStyles();
 
-    const {value, buffer, max, onValueChanged, isPaused} = props;
+    const {value, buffer, max, onValueChanged, isPaused, isLoading} = props;
 
-    const [progress, setProgress] = useState<number>(0);
+    const [progress, setProgress] = useState<number>(-1);
     const [sliderChanging, setSliderChanging] = useState<boolean>(false);
 
     function prependZero(seconds: number): string {
@@ -41,14 +42,14 @@ const PlaybackSlider: React.FC<IPlaybackSliderProps> = (props: IPlaybackSliderPr
     }
 
     useEffect(() => {
-        if (!sliderChanging) {
+        if (!sliderChanging && progress > 0) {
             onValueChanged(progress);
         }
     }, [sliderChanging]);
 
     useEffect(() => {
         if (!sliderChanging) {
-            setProgress(value);
+                setProgress(value);
         }
     }, [value]);
 
@@ -68,12 +69,13 @@ const PlaybackSlider: React.FC<IPlaybackSliderProps> = (props: IPlaybackSliderPr
                         onMouseDown={() => setSliderChanging(true)}
                         onMouseLeave={captureMouseUp}
                         max={max}
+                        disabled={isLoading}
                         step={0.01}
                         onChange={(e, v) => {
                             return setProgress(v as number);
                         }}/>
                 <LinearProgress className={classes.progress} classes={{bar: classes.bar}}
-                                value={progress == max ? 0 : (progress / max) * 100} variant="buffer"
+                                value={progress == max ? 0 : (progress / max) * 100} variant={isLoading ? "indeterminate" : "buffer"}
                                 valueBuffer={buffer ? (buffer / max) * 100 : 100}/>
             </Box>
             <Typography>{prependZero(Math.floor(progress / 60))}:{prependZero(Math.floor((progress % 60)))}</Typography>

@@ -13,7 +13,7 @@ export class PlayerController {
         this.dispatch = dispatch;
         this.store = store;
         setInterval(() => {
-            if (this.GetPlayerControlsState().isPlaying) {
+            if (this.GetPlayerControlsState().isPlaying && !this.GetPlayerControlsState().isLoading) {
                 const newPostition: number = (this.GetPlayerControlsState().playback.position as number) + 0.1;
                 this.dispatch(Seek(newPostition, false))
             }
