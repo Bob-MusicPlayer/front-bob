@@ -18,13 +18,12 @@ deploy:
     all_branches: true
 after_success:
 - env
-- docker login -e $DOCKER_EMAIL -u $DOCKER_USERNAME -p $DOCKER_PASS
-- export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH
-  ; fi`
-- docker build -f Dockerfile -t $REPO:$COMMIT .
-- docker tag $REPO:$COMMIT $REPO:$TAG
-- docker tag $REPO:$COMMIT $REPO:travis-$TRAVIS_BUILD_NUMBER
-- docker push $REPO
+- docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASS}
+- export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH; fi`
+- docker build -f Dockerfile -t ${REPO}:${COMMIT} .
+- docker tag ${REPO}:${COMMIT} ${REPO}:${TAG}
+- docker tag ${REPO}:${COMMIT} ${REPO}:travis-${TRAVIS_BUILD_NUMBER}
+- docker push ${REPO}
 env:
   DOCKER_USERNAME:
     secure: u5v54so3qH1ApjounDvcrPmLZt+eSeHi7xs/hMVVsr7x3anlh3YpfckuaVgxjT5VPcr1cxPS+gbSkuk3bs9rWTISLJo5IQz8VOfLzOgK1ZNRr+n5ZELXY+/PqLUniP9v3PAtgch7XNCKCn9s3Vh9knSh+VzfDysdDHWLYm4pOunf/lPnZ+Mee5DkclQk/qHMKJcNSRBzPxN2duzhp+xRSZk/Y5M0lH1Dc7TIQNU8yyYmX1kgal3nBVi0G2Z9vlrHahIcyUQYY8eBdIHt+jDSdvb1/H29Nw2R5PoEJsNC7i626rVwZHGryikbe9Fv9oaJ/J/FXeD/XM6qNEzBG+AGL/J0307LThYEtNOhsKL0jC+Uhopvah3mhSXsC9isKgg7Ec9675F7SF52LwqyQrAyXgK7ejadKD+eS48JtUwKk0aL3oXeofW3N+Yu8liueYkKweBw6idWdr2AndZeTDU3cXi+MhZ38S2sge2rq+c4BWpuvji4CL4oeLmw0ECc1NrAIO2MPGEq/iJUx6BlWQ+4lamQ3FtigGGlFDnQXEINDcfJYzlU4NEjzQ8mgLamEp79fgXO6mE5eJ0Q1JNJgSfQh/5Y0/uB797KhO0NYf/vtEMw2PYOq3YQGpkFhoO90ZmGVO6tW6nWO26ZqQ2PTOMCu3uI4fzo643SDJzdbbAW0AU=
