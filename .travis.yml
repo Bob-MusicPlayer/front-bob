@@ -26,7 +26,7 @@ deploy:
     all_branches: true
 after_success:
 - echo "$DOCKER_PASS" | docker login -u "$DOCKER_USERNAME" --password-stdin
-- export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH; fi`
+- export TAG=latest
 - docker build -f Dockerfile -t ${REPO}:${TRAVIS_COMMIT} .
 - docker tag ${REPO}:${TRAVIS_COMMIT} ${REPO}:${TAG}
 - docker tag ${REPO}:${TRAVIS_COMMIT} ${REPO}:travis-${TRAVIS_BUILD_NUMBER}
