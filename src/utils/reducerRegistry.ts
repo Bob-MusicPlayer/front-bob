@@ -5,7 +5,7 @@ export class ReducerRegistry {
     private _reducers = {};
 
     getReducers(): any {
-        return { globalReducer, ...this._reducers };
+        return { Global: globalReducer, ...this._reducers };
     }
 
     register(name: string, reducer: Function) {

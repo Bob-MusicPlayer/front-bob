@@ -7,11 +7,15 @@ import {ThemeProvider} from '@material-ui/styles';
 import {AppTheme} from "./theme";
 import {CssBaseline} from "@material-ui/core";
 import {BrowserRouter} from "react-router-dom";
-import {IsPlaying, Play, Seek, SetPlaybackInfo} from "./container/PlayerControls/actions";
+import {IsPlaying, Seek, SetPlaybackInfo} from "./container/PlayerControls/actions";
+import {SetLoading, Sync} from "./utils/globalActions";
 
-const e1 = new EventSource('http://192.168.11.241:5002/api/v1/events');
+const e1 = new EventSource('http://localhost:5002/api/v1/events');
 e1.onerror = () => {
-    console.log("sef")
+    console.log("sef");
+};
+e1.onopen = () => {
+    store.dispatch(Sync());
 };
 e1.onmessage = (event) => {
     const data = JSON.parse(event.data);
@@ -23,12 +27,15 @@ e1.onmessage = (event) => {
             store.dispatch(IsPlaying(false));
             break;
         case "sync":
-            if (data.payload.playback != null && store.getState()) {
+            if (data.payload != null) {
                 store.dispatch(SetPlaybackInfo(data.payload));
             }
             break;
         case "seek":
             store.dispatch(Seek(data.payload, false));
+            break;
+        case "loading":
+            store.dispatch(SetLoading(data.payload));
             break;
         default:
             console.warn("Got unknown event: " + data.event);
@@ -49,6 +56,6 @@ const App: React.FC = () => {
             </Provider>
         </ThemeProvider>
     );
-}
+};
 
 export default App;

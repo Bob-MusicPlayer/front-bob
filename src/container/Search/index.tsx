@@ -7,29 +7,28 @@ import SearchIcon from '@material-ui/icons/SearchRounded';
 import ReducerRegistry from "../../utils/reducerRegistry";
 import reducer, {reducerName} from "./reducer";
 import {
-    Badge,
     Box,
     Button, CircularProgress,
     Container, Divider,
-    InputAdornment, List, ListItem, ListItemAvatar, ListItemText,
+    InputAdornment, List,
     MenuItem,
     OutlinedInput,
-    Select, Tab, Tabs,
-    TextField,
+    Select, Tab, Table, TableBody, TableCell, TableHead, TableRow, Tabs,
     Typography
 } from "@material-ui/core";
 import {SearchStyles} from "./styles";
 import {SearchResponse} from "../../models/SearchResponse.model";
-import {act, Simulate} from "react-dom/test-utils";
-import Thumbnail from "../../components/Thumbnail";
 import {Playback} from "../../models/Playback.model";
-import {SetPlayback} from "../../utils/globalActions";
+import {QueueNext, SetPlayback} from "../../utils/globalActions";
+import SearchItem from "../../components/SearchItem";
+import SearchResultTable from "../../components/SearchResultTable";
 
 interface ISearchContainerProps {
     onSearch: (query: string) => void,
     loading: boolean,
     results: SearchResponse,
-    onSetPlayback: (playback: Playback) => void
+    onSetPlayback: (playback: Playback) => void,
+    onQueueNext: (playback: Playback) => void,
 }
 
 ReducerRegistry.register(reducerName, reducer);
@@ -57,20 +56,21 @@ function TabPanel(props: TabPanelProps) {
     );
 }
 
-function PlaybackFromIdAndSource(id: string, source: string): Playback {
-    return {
-        id: id,
-        source: source,
-    }
-}
-
 const SearchContainer: React.FC<ISearchContainerProps> = (props: ISearchContainerProps) => {
-    const {onSearch, loading, results, onSetPlayback} = props;
+    const {onSearch, loading, results, onSetPlayback, onQueueNext} = props;
     const classes = SearchStyles();
 
     const [source, setSource] = useState<string>("all");
     const [query, setQuery] = useState<string>("");
     const [activeTab, setActiveTab] = useState<number>(0);
+
+    function _setSource(e: any, children: React.ReactNode) {
+        setSource(e.target.value);
+    }
+
+    function _setQuery(e: any) {
+        setQuery(e.target.value);
+    }
 
     return (
         <Container fixed>
@@ -78,7 +78,7 @@ const SearchContainer: React.FC<ISearchContainerProps> = (props: ISearchContaine
                 <Typography variant="h4" className={classes.header}>Search</Typography>
                 <Typography variant="subtitle1">Search for Songs among different Players</Typography>
                 <Box marginTop={2} marginBottom={1} width="100%" display="flex">
-                    <Select value={source} onChange={(e) => setSource(e.target.value as string)}
+                    <Select value={source} onChange={_setSource}
                             input={<OutlinedInput labelWidth={0} name="age"
                                                   id="outlined-age-simple"/>}>
                         <MenuItem value="all">All</MenuItem>
@@ -88,7 +88,7 @@ const SearchContainer: React.FC<ISearchContainerProps> = (props: ISearchContaine
                     <Box marginX={2} flexGrow={1}>
                         <OutlinedInput fullWidth startAdornment={<InputAdornment position="start">
                             <SearchIcon className={classes.textSecondary}/>
-                        </InputAdornment>} labelWidth={0} value={query} onChange={(e) => setQuery(e.target.value)}
+                        </InputAdornment>} labelWidth={0} value={query} onChange={_setQuery}
                                        onKeyUp={event => event.keyCode === 13 ? onSearch(query) : null}
                                        placeholder="Search..."/>
                     </Box>
@@ -106,24 +106,14 @@ const SearchContainer: React.FC<ISearchContainerProps> = (props: ISearchContaine
                             <Tabs textColor="primary" variant="standard" indicatorColor="primary" value={activeTab}
                                   onChange={(e, v) => setActiveTab(v)}>
                                 {
-                                    Object.keys(results).map(x => <Tab label={x}/>)
+                                    Object.keys(results).map((x: string, i: number) => <Tab key={i} label={x}/>)
                                 }
                             </Tabs>
                             <Divider/>
                             {
-                                Object.keys(results).map((x, i) => <TabPanel value={activeTab} index={i}>
-                                    <List dense>
-                                        {results[x].playbacks.map(playback => <ListItem button onClick={() => onSetPlayback(playback)}>
-                                            <ListItemAvatar>
-                                                {
-                                                    playback.thumbnailUrl !== undefined ?
-                                                    <Thumbnail thumbnailUrl={playback.thumbnailUrl}/>
-                                                    : null
-                                                }
-                                            </ListItemAvatar>
-                                            <ListItemText primary={playback.title} secondary={playback.author}/>
-                                        </ListItem>)}
-                                    </List>
+                                Object.keys(results).map((x: string, i: number) => <TabPanel key={i} value={activeTab}
+                                                                                             index={i}>
+                                    <SearchResultTable results={results[x]} onQueueNext={onQueueNext} onSetPlayback={onSetPlayback}/>
                                 </TabPanel>)
                             }
                         </div> : null
@@ -146,7 +136,8 @@ const mapStateToProps = (state: any) => {
 const mapDispatchToProps = (dispatch: Dispatch) => {
     return {
         onSearch: (query: string) => dispatch(Search(query)),
-        onSetPlayback: (playback: Playback) => dispatch(SetPlayback(playback))
+        onSetPlayback: (playback: Playback) => dispatch(SetPlayback(playback)),
+        onQueueNext: (playback: Playback) => dispatch(QueueNext(playback))
     };
 };
 

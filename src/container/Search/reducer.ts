@@ -2,7 +2,6 @@ import {AnyAction} from "redux";
 import {ISearchState} from "./state";
 import produce from "immer";
 import {SEARCH, SEARCH_SUCCEED} from "./constants";
-import {SearchResponse} from "../../models/SearchResponse.model";
 
 export const reducerName = 'Search';
 

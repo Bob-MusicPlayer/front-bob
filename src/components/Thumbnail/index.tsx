@@ -1,6 +1,5 @@
 import * as React from "react";
 import {Box} from "@material-ui/core";
-import {Playback} from "../../models/Playback.model";
 
 interface IThumbnailProps {
     thumbnailUrl: string

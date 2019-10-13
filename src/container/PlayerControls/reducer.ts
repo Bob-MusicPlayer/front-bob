@@ -4,12 +4,15 @@ import {IPlayerControlsState} from "./state";
 import produce from "immer";
 import {IS_PLAYING} from "./constants";
 import {PLAYBACK_SET, SET_PLAYBACK} from "../../utils/globalConstants";
+import {PlayerState} from "../../models/PlayerState.enum";
 
 export const reducerName = 'PlayerControls';
 
 const initialState: IPlayerControlsState = {
     isPlaying: false,
-    isLoading: false,
+    isStopped: false,
+    nextAvailable: false,
+    previousAvailable: false,
     playback: {
         author: "",
         cachePosition: 0,
@@ -36,14 +39,17 @@ export default function reducer(state = initialState, action: AnyAction) {
                 draft.playback.title = "";
                 draft.playback.thumbnailUrl = "";
                 draft.playback.author = "";
-                draft.isLoading = true;
                 break;
             case PLAYBACK_SET:
-                draft.isLoading = false;
                 break;
             case SET_PLAYBACK_INFO:
-                draft.playback = action.info.playback;
-                draft.isPlaying = action.info.isPlaying;
+                if (action.info.playback !== null) {
+                    draft.playback = action.info.playback;
+                }
+                draft.isPlaying = action.info.playerState === PlayerState.Playing;
+                draft.isStopped = action.info.playerState === PlayerState.NoPlayback;
+                draft.nextAvailable = action.info.nextAvailable;
+                draft.previousAvailable = action.info.previousAvailable;
                 break;
             case SEEK:
                 draft.playback.position = action.seconds;

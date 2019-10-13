@@ -1,7 +1,7 @@
 import * as React from "react";
 import {Box, LinearProgress, Slider, Typography} from "@material-ui/core";
 import {PlaybackSliderStyles} from "./styles";
-import {MouseEventHandler, useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import {MouseEvent} from "react";
 
 interface IPlaybackSliderProps {
@@ -16,7 +16,7 @@ interface IPlaybackSliderProps {
 const PlaybackSlider: React.FC<IPlaybackSliderProps> = (props: IPlaybackSliderProps) => {
     const classes = PlaybackSliderStyles();
 
-    const {value, buffer, max, onValueChanged, isPaused, isLoading} = props;
+    const {value, buffer, max, onValueChanged, isLoading} = props;
 
     const [progress, setProgress] = useState<number>(-1);
     const [sliderChanging, setSliderChanging] = useState<boolean>(false);
@@ -45,12 +45,14 @@ const PlaybackSlider: React.FC<IPlaybackSliderProps> = (props: IPlaybackSliderPr
         if (!sliderChanging && progress > 0) {
             onValueChanged(progress);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [sliderChanging]);
 
     useEffect(() => {
         if (!sliderChanging) {
                 setProgress(value);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [value]);
 
     return (
@@ -75,7 +77,7 @@ const PlaybackSlider: React.FC<IPlaybackSliderProps> = (props: IPlaybackSliderPr
                             return setProgress(v as number);
                         }}/>
                 <LinearProgress className={classes.progress} classes={{bar: classes.bar}}
-                                value={progress == max ? 0 : (progress / max) * 100} variant={isLoading ? "indeterminate" : "buffer"}
+                                value={progress === max ? 0 : (progress / max) * 100} variant={isLoading ? "indeterminate" : "buffer"}
                                 valueBuffer={buffer ? (buffer / max) * 100 : 100}/>
             </Box>
             <Typography>{prependZero(Math.floor(progress / 60))}:{prependZero(Math.floor((progress % 60)))}</Typography>
@@ -83,4 +85,4 @@ const PlaybackSlider: React.FC<IPlaybackSliderProps> = (props: IPlaybackSliderPr
     );
 };
 
-export default PlaybackSlider;
+export default React.memo(PlaybackSlider);

@@ -1,26 +1,26 @@
 import React from "react";
 import {connect} from "react-redux";
-import {Dispatch} from "redux";
-import {SetExample} from "./actions";
 import ReducerRegistry from "../../utils/reducerRegistry";
 import reducer, {reducerName} from "./reducer";
-import {PanelStyles} from "./styles";
 import ApplicationDrawer from "../../components/ApplicationDrawer";
 import PlayerControlsContainer from "../PlayerControls";
 import {Switch, Route} from "react-router-dom";
 import SearchContainer from "../Search";
-import {Box} from "@material-ui/core";
+import {Box, Slide, Snackbar} from "@material-ui/core";
+import {Simulate} from "react-dom/test-utils";
+import {IGlobalState} from "../../utils/globalState";
+import {PanelStyles} from "./styles";
+import LoadingSnackbar from "../../components/LoadingSnackbar";
 
 interface IPanelContainerProps {
-    example: string,
-    setExample: (t: string) => void
+    loading: boolean,
 }
 
 ReducerRegistry.register(reducerName, reducer);
 
 const PanelContainer: React.FC<IPanelContainerProps> = (props: IPanelContainerProps) => {
+    const {loading} = props;
     const classes = PanelStyles();
-    const {example, setExample} = props;
 
     return (
         <Box height="100%">
@@ -33,26 +33,31 @@ const PanelContainer: React.FC<IPanelContainerProps> = (props: IPanelContainerPr
                 </Box>
             </Box>
             <Box position="absolute" bottom={0} width="100%" zIndex={1200}>
-                <PlayerControlsContainer/>
+                <PlayerControlsContainer />
             </Box>
+            <Snackbar
+                anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                }}
+                open={loading}
+            >
+                <LoadingSnackbar message="Loading Song..." />
+            </Snackbar>
         </Box>
     );
 };
 
 const mapStateToProps = (state: any) => {
     const reducerState = state[reducerName];
+    const globalState: IGlobalState = state["Global"];
 
     return {
-        example: reducerState.example
+        example: reducerState.example,
+        loading: globalState.loading
     };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch) => {
-    return {
-        setExample: (t: string) => dispatch(SetExample(t))
-    };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(PanelContainer);
+export default connect(mapStateToProps)(PanelContainer);
 
 
